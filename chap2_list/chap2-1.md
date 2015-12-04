@@ -234,7 +234,7 @@ int list_add(Node *node,Node * newnode){
 
 如何判断一个链表是否有环是一个经典的面试问题：
 
-![huan](./chap2_list/huan.png)
+![huan](./huan.png)
 
 有两个方法：
 
