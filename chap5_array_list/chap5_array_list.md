@@ -179,7 +179,82 @@ void reserve_int3(TS *A,TS *B){
 
 接下来就是我们的一次定位快速转置了，明天说。
 
+duang !!! 第二天了，今天就是昨天的明天，我们来学习如何如一次定位快速转置，首先我们说说为什么需要一次定位快速转置，之前的所有转置方法都需要，转置动作完成后重新排序以求得到的结果是列序递增的，并且使用了双重循环。
 
 
+####一次定位快速转置
 
+这个算法只需要对被扫描的三元组表只扫描一次，使得所有的元素在被扫描一次后就能被放到自己应有的位置。
+
+但是实现这个算法，我们必须要知道转置后这个元素应当在三元组表的什么位置，我们需要知道这一列的第一个非零元素的位置，以单拿到了每一列第一个非零元素的位置，我们就能一次把这个元素放到三元组表的对应位置，后边的元素也就能放到对应的位置了。
+
+于是我们增加两个向量来记录，每一列的非零元素个数，以及每一列第一个非零元在转置后的恰当位置，由此得出公式
+
+@position[1] = 1;
+@position[col] = position[col] + num[col-1]    上一个非零元的位置+非零元个数
+
+
+```
+#define   MAX   1000
+
+typedef struct triple{
+    
+    int row,col;
+    int value  ;
+
+}triple;
+
+
+typedef struct TS{
+
+    triple data[MAX + 1];
+    int rows,cols,nums;
+
+}TS;
+
+void fast(TS *A,TS *B){
+    int num[MAX];
+    int position[MAX];
+
+    B->rows = A->cols;
+    B->cols = A->rows;
+    B->nums = A->nums;
+
+    int col,row;
+    int p,q    ;
+    if(B->nums){
+        for(col = 1;col < A->cols;col++)
+            num[col] = 0;
+        for(col = 1;col <=A->nums;col++){
+            num[A->data[col].col]++;
+        }
+
+        position[1] = 1;
+        for(col = 2;col <= A->nums;col++){
+            position[col]= position[col-1] + num[col-1];
+            
+        }
+            
+        printf("\n");
+
+        for(p = 1;p <= A->nums;p++){
+            col = A->data[p].col;
+            q = position[col];
+            B->data[q].row = A->data[p].col;
+            B->data[q].col = A->data[p].row;
+            B->data[q].value = A->data[p].value;
+            position[col]++;
+            
+        }
+
+    }
+}
+
+
+```
+
+转置之后是按照行排序转置好的，如图第一个是源矩阵，第二个是转置后的矩阵,因为使用了列号确定了转置后的行号,（沿袭了书上的例子）。
+
+
+![fast](./fast.png)
     
