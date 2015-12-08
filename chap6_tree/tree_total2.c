@@ -11,13 +11,49 @@
 #include "./tree_total2.h"
 
 
-stack *INIT_stack(void);           /* init the satck */
+stack *INIT_stack(void);           /*  init the satck */
 node *pop(stack * S);              /*  pop  */
 int push(stack *S,node * node);    /*  push */
-node *gettop(stack *S);            /* gettop */             
-queue * INIT_queue();              /*init the queue */
-int queue_inq(queue *Q,node *pos); /*queue_inq */
-int isEmpty(stack *S);             /* return 1:not empty; 0:empty; -1:error */
+node *gettop(stack *S);            /*  gettop */             
+queue * INIT_queue();              /*  init the queue */
+int queue_inq(queue *Q,node *pos); /*  queue_inq */
+int isEmpty(stack *S);             /*  return 1:not empty; 0:empty; -1:error */
+void levelorder(node *root);       /*  base on queue traval the bin_tree */
+int isEmpty_q(queue *Q);           /*  return 1:not empty; 0:empty; -1:error*/
+node* queue_deq(queue *Q);         /*  out of queue */
+
+int isEmpty_q(queue * Q){
+
+    if(Q->count == 0){
+        return 0;
+    }else if(Q->count < 0){
+        return -1;
+    }else if(Q->count > 0){
+        return 1;
+    }
+
+}
+
+
+void levelorder( node *root ){
+    queue * Q;
+    Q = INIT_queue();
+    node *temp;
+    temp = root ;
+    queue_inq(Q,temp);
+    while(isEmpty_q(Q)){
+        temp = queue_deq(Q);
+        printf("%c ",temp->data);
+        if(temp->lchild != NULL)
+            queue_inq(Q,temp->lchild);
+        if(temp->rchild != NULL)
+            queue_inq(Q,temp->rchild);
+    }
+    
+
+}
+
+
 
 stack* INIT_stack(){
     stack *S;
@@ -241,5 +277,7 @@ int main(){
     pre_tree(R);
     med_tree(R);
     post_tree(R);
+    levelorder(R);
+    printf("\n");
 
 }
