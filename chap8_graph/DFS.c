@@ -81,14 +81,15 @@ void TraverseGraph(AdjMatrix *G,int index){
     }
     for(i = 1;i <= G->vexnum;i++){
         if(!G->vex[i])
-            DFS(G,index);
+            DFS(G,i);
     }
 }
 
 int FirstAdjvex(AdjMatrix *G,int i){
     int j ;
-    for(j = 1;j < G->vexnum;j++){
-        if(G->arcs[i][j] != -1){
+    for(j = 1;j <= G->vexnum;j++){
+        if(G->arcs[i][j] != 0){
+            printf("j = %d\n",j);
             return j;
         }
     }
@@ -98,7 +99,7 @@ int FirstAdjvex(AdjMatrix *G,int i){
 int NextAdjvex(AdjMatrix *G,int i,int w){
     int j;
     for(j = 1;j <= G->vexnum;j++){
-        if(G->arcs[i][j] != -1  &&  j!= w){
+        if(G->arcs[i][j] != 0  &&  j!= w){
             return j;
         }
     }
