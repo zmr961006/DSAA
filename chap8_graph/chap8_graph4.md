@@ -60,15 +60,76 @@ PS：时间复杂度为O(n^2),适合稠密图。
 
 ###Kruskal 算法
 
+这个算法思想不难，就是用代码实现费点事。
+
+思想：适用贪心准则从剩下的边中选择不会产生回路且具有最小权值的边加入到生成树的边集中。
+
+步骤：根据每一条边的权值，将边集排序
+     
+         建立顶点的集合
+         建立边的空集合
+         逐步从边集从权值小的开始，挑选边加入边的空集，必须保证顶点集合中不能有重复结点，防
+    止环的产生
+         最后得到的边集即为所求。
+              
 
 ```
+
+#define   MAXVEX      20
+#define   INFINITY    32767
+
+
+typedef int vextype ;
+
+typedef struct AdjMatrix{
+    
+    int arcs[MAXVEX][MAXVEX];
+    vextype vex[MAXVEX];
+    int vexnum;
+    int arcnum;
+
+}AdjMatrix;        /*邻接矩阵*/
+
+
+typedef struct group{
+
+    int  vex1;
+    int  vex2;
+    int  weight;
+
+}group;       /*表示一条边*/
+
+typedef struct top_group{
+    
+    group  topgroup[MAXVEX];
+    int vexnum;
+    int arcnum;
+
+}top_group;  /*边的排序集合*/
+
+
+typedef struct arc{
+    
+    int vex1;
+    int vex2;
+    int weight;
+    struct arc *next;
+
+}arc;       /*顶点邻接表
+
+
+typedef struct set{
+
+    arc vexarry[MAXVEX];
+    int array_count;
+
+}set; /*顶点邻接表*/
+
+
 int  charge(top_group *topgroup,set *S,int i){
     int t_vex1,t_vex2,t_weight;
     int j,k;
-    arc *q,*t;
-
-    t = (arc *)malloc(sizeof(struct arc));
-
+   
     t_vex1 = topgroup->topgroup[i].vex1;
     t_vex2 = topgroup->topgroup[i].vex2;
     t_weight = topgroup->topgroup[i].weight;
@@ -141,6 +202,6 @@ void kruskal(AdjMatrix *G,top_group *topgroup,set *S){
 ```
     
 
-###拓扑排序
+
 
 
