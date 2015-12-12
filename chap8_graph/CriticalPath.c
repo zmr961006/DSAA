@@ -1,17 +1,24 @@
 /*************************************************************************
-	> File Name: linjieb.c
+	> File Name: CriticalPath.c
 	> Author: 
 	> Mail: 
-	> Created Time: 2015年12月09日 星期三 18时02分03秒
+	> Created Time: 2015年12月12日 星期六 16时59分54秒
  ************************************************************************/
 
 #include<stdio.h>
-#include<string.h>
 #include<stdlib.h>
+#include<string.h>
+#include<stdarg.h>
 
-#define  MAXVEX    20
-#define  TURE      1
-#define  FAIL      -1
+
+#define  MAXVEX     20
+#define  SUCCESS    1
+#define  TURE       1
+#define  FAIL       -1
+
+#define MAX(x,y)       (((x)>(y))?(x):(y))
+#define MAIN(x,y)      (((x)<(y))?(x):(y))
+
 
 typedef struct ArcNode{         /* node type */
     
@@ -21,16 +28,27 @@ typedef struct ArcNode{         /* node type */
 
 }ArcNode;
 
+typedef struct active{          /*活动结构体*/
+    int vex1;
+    int vex2;
+    int weight;
+}active;
 
-typedef struct VertexNode{
+typedef struct top{
+    int adjvex;
+    int weight;
+}EE;
+
+typedef struct VertexNode{     /*边表结构*/
     
     char vexdata ;
     ArcNode *head;
+    int count;
 
 }VertexNode;
 
 
-typedef struct AdjList{
+typedef struct AdjList{      /*邻接表结构体*/
     
     VertexNode vertex[MAXVEX];
     int vexnum;
@@ -39,7 +57,8 @@ typedef struct AdjList{
 
 }AdjList;
 
-//static int indegree[MAXVEX];
+
+static active act[MAXVEX];
 
 void add_node(AdjList *G,int vex1,int vex2,int weight){
 
@@ -51,10 +70,12 @@ void add_node(AdjList *G,int vex1,int vex2,int weight){
     do{
         if(NULL == q){
             G->vertex[vex1].head  = p;
+            G->vertex[vex1].count++;
             break;
         }else if(NULL == q->next){
             q->next = p;
             p->next = NULL;
+            G->vertex[vex1].count++;     /*插入计数递增*/
             break;
         }else{
             q = q->next;
@@ -65,7 +86,7 @@ void add_node(AdjList *G,int vex1,int vex2,int weight){
 
 }
 
-void AdjList_create(AdjList *G){
+void AdjList_create(AdjList *G,AdjList *N){     /*建立正逆两个邻接表*/
     
     int i,j,k;
     int vex1,vex2,weight;
@@ -77,7 +98,8 @@ void AdjList_create(AdjList *G){
     printf("please enter the vexnum and arcnum\n");
 
     scanf("%d,%d",&G->vexnum,&G->arcnum);
-
+    N->vexnum = G->vexnum;
+    N->arcnum = G->arcnum;
     for(i = 1;i <= G->vexnum;i++){
 
         G->vertex[i].head  = NULL;
@@ -88,8 +110,11 @@ void AdjList_create(AdjList *G){
     for(i = 1;i <= G->arcnum;i++){
         printf("please enter the vex1 and vex2 and weight\n");
         scanf("%d,%d,%d",&vex1,&vex2,&weight);
+        act[i].vex1 = vex1;
+        act[i].vex2 = vex2;
+        act[i].weight = weight;
         add_node(G,vex1,vex2,weight);
-        
+        add_node(N,vex2,vex1,weight);
     }
 
 }
@@ -104,17 +129,15 @@ void show(AdjList *G){
         if(temp == NULL){
             printf("____________");
         }else{
+            printf("%d :",i);
             while(temp != NULL){
-                printf("%d ",temp->adjvex);
+                printf("%d-%d ",temp->adjvex,temp->weight);
                 temp = temp->next;
             }
         }   
         printf("\n");
     }
 }
-
-
-
 void get_in_degree(AdjList *G,int *indegree){
     
     int i;
@@ -160,28 +183,69 @@ int set_sub(AdjList *G,int *indegree,int a){
     
 }
 
+//void  set_EE(AdjList *N,int k,EE *EE,int i);  /*求第一个数组*/
 
-void Topsort(AdjList *G,int *indegree){
+void Topsort(AdjList *G,int *indegree,EE *EE){
     
     int i,j,k;
     get_in_degree(G,indegree);
     for(i = 1;i <= G->vexnum;i++){
         k = get_zero(G,indegree);
         if(k != -1){
-            printf("%d \n",k);
+            EE[i].adjvex = k;
+            //printf("*******\n");
+            //set_EE(G,k,EE,i);
             set_sub(G,indegree,k);
         }
     }
-
+    
 
 }
+
+
+void  set_EE(AdjList *N,EE *EE){  /*求第一个数组*/
+    int i,j,maxweight,k;
+    ArcNode *temp;
+    EE[1].weight = 0;
+    for(i = 2;i <= N->vexnum;i++){
+        j = EE[i].adjvex;
+        k = N->vertex[j].count;
+        temp = N->vertex[j].head;
+        maxweight = EE[i-1].weight ; //N->vertex[EE[i-1].adjvex];
+        printf("EE:%d maxweight:%d\n",EE[i-1].weight,temp->weight);
+        printf("j = %d k = %d temp->adj = %d temp->wei:%d\n",j,k,temp->adjvex,temp->weight);
+        do{
+            if(maxweight < temp->weight){
+                if(temp->adjvex == EE[i-1].adjvex){
+                    maxweight = EE[i-1].weight + temp->weight;
+                }else{
+                    maxweight = temp->weight;
+                }
+            }
+            k--;
+            temp = temp->next;
+        }while(k>0);
+        EE[i].weight = maxweight;
+    }
+}
+
 
 int main(){
-    
-    AdjList *G;
-    int indegree[MAXVEX] = {0};
+    AdjList *G,*N;
     G = (AdjList *)malloc(sizeof(struct AdjList));
-    AdjList_create(G);
-    Topsort(G,indegree);
+    N = (AdjList *)malloc(sizeof(struct AdjList));
+    int indegree[MAXVEX];
+    AdjList_create(G,N);
+    EE EE[MAXVEX];
+    //show(G);
+    
+    //show(N);
 
+    Topsort(G,indegree,EE);
+    set_EE(N,EE);
+    int i;
+    for(i = 1;i <= G->vexnum;i++){
+        printf("%d :%d\n",EE[i].adjvex,EE[i].weight);
+    }
 }
+
