@@ -39,6 +39,11 @@ typedef struct top{
     int weight;
 }EE;
 
+typedef struct tpp{
+    int adjvex;
+    int weight;
+}VE;
+
 typedef struct VertexNode{     /*边表结构*/
     
     char vexdata ;
@@ -58,7 +63,8 @@ typedef struct AdjList{      /*邻接表结构体*/
 }AdjList;
 
 
-static active act[MAXVEX];
+static active act[MAXVEX];    /*事件最早*/
+static active vct[MAXVEX];    /*事件最晚*/
 
 void add_node(AdjList *G,int vex1,int vex2,int weight){
 
@@ -113,6 +119,11 @@ void AdjList_create(AdjList *G,AdjList *N){     /*建立正逆两个邻接表*/
         act[i].vex1 = vex1;
         act[i].vex2 = vex2;
         act[i].weight = weight;
+        vct[i].vex1 = vex1;
+        vct[i].vex2 = vex2;
+        vct[i].weight = weight;
+        
+
         add_node(G,vex1,vex2,weight);
         add_node(N,vex2,vex1,weight);
     }
@@ -185,7 +196,7 @@ int set_sub(AdjList *G,int *indegree,int a){
 
 //void  set_EE(AdjList *N,int k,EE *EE,int i);  /*求第一个数组*/
 
-void Topsort(AdjList *G,int *indegree,EE *EE){
+void Topsort(AdjList *G,int *indegree,EE *EE,VE *VE){
     
     int i,j,k;
     get_in_degree(G,indegree);
@@ -193,6 +204,7 @@ void Topsort(AdjList *G,int *indegree,EE *EE){
         k = get_zero(G,indegree);
         if(k != -1){
             EE[i].adjvex = k;
+            VE[i].adjvex = k;
             //printf("*******\n");
             //set_EE(G,k,EE,i);
             set_sub(G,indegree,k);
@@ -229,6 +241,36 @@ void  set_EE(AdjList *N,EE *EE){  /*求第一个数组*/
     }
 }
 
+void set_VE(AdjList * G,VE *VE,EE *EE){
+    int i,j,minweight,k;
+    ArcNode *temp;
+    VE[G->vexnum].weight = EE[G->vexnum].weight ;
+    for(i = G->vexnum-1;i >= 1;i--){
+        j=VE[i].adjvex;
+        k = G->vertex[j].count;
+        temp = G->vertex[j].head;
+        minweight = 32767;
+        do{
+            if(minweight > temp->weight)
+                minweight = VE[temp->adjvex].weight - temp->weight;
+            k--;
+            temp = temp->next;
+            
+        }while(k>0);
+        VE[i].weight = minweight;
+    }
+}
+
+void get_result(AdjList *G,AdjList *Nactive *act,active *vct,EE *EE,VE *VE){
+    int i,j,k;
+    int result;
+    for(i = 1;G->vexnum;i++){
+        if(result = min(EE(x),EE(y)) == min(VE(x),VE(y))){
+            printf("the CPATH = %d",result);
+        }
+    }
+}
+
 
 int main(){
     AdjList *G,*N;
@@ -237,15 +279,20 @@ int main(){
     int indegree[MAXVEX];
     AdjList_create(G,N);
     EE EE[MAXVEX];
-    //show(G);
+    VE VE[MAXVEX];
     
-    //show(N);
-
-    Topsort(G,indegree,EE);
+    Topsort(G,indegree,EE,VE);
     set_EE(N,EE);
+    set_VE(G,VE,EE);
+    
+    get_result();
+
+    
+
     int i;
     for(i = 1;i <= G->vexnum;i++){
-        printf("%d :%d\n",EE[i].adjvex,EE[i].weight);
+        printf("%d :%d\n",VE[i].adjvex,VE[i].weight);
     }
+
 }
 
