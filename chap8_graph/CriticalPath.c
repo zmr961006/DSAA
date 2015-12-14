@@ -261,7 +261,7 @@ void set_VE(AdjList * G,VE *VE,EE *EE){
     }
 }
 
-void get_result(AdjList *G,AdjList *Nactive *act,active *vct,EE *EE,VE *VE){
+void get_result(AdjList *G,AdjList *Nactive *act,active *vct,EE *EE,VE *VE){    /*比较每个活动的最早发生时间和最晚发生时间，找出相等的即为所求*/
     int i,j,k;
     int result;
     for(i = 1;G->vexnum;i++){
@@ -278,8 +278,8 @@ int main(){
     N = (AdjList *)malloc(sizeof(struct AdjList));
     int indegree[MAXVEX];
     AdjList_create(G,N);
-    EE EE[MAXVEX];
-    VE VE[MAXVEX];
+    EE EE[MAXVEX];   /*每个事件的最早发生时间*/
+    VE VE[MAXVEX];   /*每个事件的最迟发生时间*/
     
     Topsort(G,indegree,EE,VE);
     set_EE(N,EE);
