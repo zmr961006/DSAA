@@ -1,24 +1,10 @@
-#第七章  二叉排序树
+/*************************************************************************
+	> File Name: bin_tree_srearch.c
+	> Author: 
+	> Mail: 
+	> Created Time: 2015年12月15日 星期二 10时36分28秒
+ ************************************************************************/
 
-##二叉排序树
-
-二叉排序树（BST）也就是二叉查找树。满足以下性质的特殊二叉树。
-
-1.如果左子树不为空，则左子树上的所有结点的值均小于根结点的值。
-
-2.如果右子树不为空，则右子树上的所有结点的值均大于根结点的值。
-
-3.它的左，右子树也都是二叉排序树，毕竟树的一个基本属性就是递归性。
-
-###关于二叉排序树的性能分析
-
-二叉排序树的查找最差情况于顺序查找相同，ASL=(n+1)/2 .
-
-最好的情况与折半查找相同，ASL =  log2N .
-
-###关于二叉排序树的一些操作
-
-```
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -35,9 +21,6 @@ typedef struct Node{
 
 }Node,*Bstree;
 
-```
-####查找
-```
 Node *SearchBST(Node *bst,KeyType K){
     
     Node *q;
@@ -55,6 +38,7 @@ Node *SearchBST(Node *bst,KeyType K){
     return NULL;
 }
 
+
 Node *SearchBST_B(Node *bst,KeyType K){
     
     if(!bst){
@@ -68,9 +52,7 @@ Node *SearchBST_B(Node *bst,KeyType K){
     }
 }
 
-```
-####插入
-```
+
 void InsertBST(Node **bst,KeyType K){
     
     Node *s;
@@ -89,11 +71,7 @@ void InsertBST(Node **bst,KeyType K){
 
 }
 
-```
 
-####创建
-
-```
 Node ** Created_bst(Node **bst){
     KeyType key;
     *bst = NULL;
@@ -112,8 +90,6 @@ Node ** Created_bst(Node **bst){
     return bst;
 }
 
-
-遍历：
 void show(Node *root){
     if(root){
         show(root->lchild);
@@ -128,10 +104,6 @@ void show(Node *root){
 }
 
 
-```
-###删除
-
-```
 Node * Delete(Node * node,KeyType K){
     Node *p,*f,*s,*q;
     p = *node;
@@ -177,5 +149,13 @@ Node * Delete(Node * node,KeyType K){
 
 }
 
-```
 
+int main(){
+   
+    Node **bst;
+    bst = (Node **)malloc(sizeof(Node));
+    bst = Created_bst(bst);
+    show(*bst);
+
+
+}
