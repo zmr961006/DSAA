@@ -87,7 +87,42 @@ if(!dest || !src){
 }
 ```
 
-这些才是写str系列代码的考点所在。
+再看一个strcat
+
+```
+/* Append SRC on the end of DEST.  */
+char *
+strcat (dest, src)
+     char *dest;
+     const char *src;
+{
+  char *s1 = dest;
+  const char *s2 = src;
+  char c;
+
+  /* Find the end of the string.  */
+  do
+    c = *s1++;
+  while (c != '\0');
+
+  /* Make S1 point before the next character, so we can increment
+     it while memory is read (wins on pipelined cpus).  */
+     
+  /*这里检查了下一个字符是否可读，如果不可读直接就在这里发生错误终止程序，
+  防止即使写了入了字符串，后边却不可读出的情况*/
+  
+  s1 -= 2;
+
+  do
+    {
+      c = *s2++;
+      *++s1 = c;
+    }
+  while (c != '\0');
+
+  return dest;
+}
+```
 
 
 ##下来说下KMP 
