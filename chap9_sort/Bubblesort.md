@@ -33,6 +33,28 @@ void BubbleSort(RecordList L){
     }
 }
 
+一个递归实现
 
+void sort(int *add,int len)
+{
+    int fact = 0 , isorderd = 0;
+    if(len <= 1 || !add){
+        return;
+    }
+
+    while(fact < len-1){
+        if(add[fact] > add[fact+1]){
+            add[fact]   ^= add[fact+1];
+            add[fact+1] ^= add[fact];
+            add[fact]   ^= add[fact+1];
+            isorderd    = 1;
+        }
+        fact++;
+    }
+    if(!isorderd){
+        return;
+    }
+    sort(add,len-1);
+}
 
 ```

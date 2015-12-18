@@ -44,4 +44,39 @@ void shellSort_S(RecordList L,int dlta[]){
     for(k = 0;k <L.length;k++)
         shellSort(L,dlta[k]);
 }
+
+
+一个递归实现
+void sort(int *add,int len,int gap)
+{
+    int fst   = 0 , sec = 0    ;
+    int index = 0 /*, gap = len/2*/;
+
+    if(len <= 1 || !add){
+        return;
+    }
+    if(0 == gap){
+        return;
+    }
+
+    //while(gap != 0){
+        for(fst=gap;fst<len;fst++){
+            index = add[fst];
+            for(sec=fst;sec>=gap;sec-=gap){
+                if(index < add[sec - gap]){
+                    add[sec] = add[sec - gap];
+                }else{
+                    break;
+                }
+            }//end for[sec]
+            add[sec] = index;
+        }//end for[fst]
+        //gap /= 2;
+        //display(add,len);
+    //}//end while[gap]
+    sort(add,len,gap/2);
+}
+
+ 如果去掉注释就是非递归的
+
 ```

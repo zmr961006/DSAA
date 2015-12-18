@@ -35,4 +35,31 @@ void SelectSort(RecordList L){
 
 
 }
+
+上边是书上的一个代码
+下边的这个是递归的一个
+void sort(int *add,int len)
+{
+    int fact  = 1;
+    int index = 0;
+    if(len <= 1 || !add){
+        return;
+    }
+
+    index = 0;
+    while(fact < len){
+        if(add[fact] < add[index]){
+            index = fact;
+        }
+        fact++;
+    }
+    if(index == 0){
+        goto _DIGUI ;
+    }
+    add[0]     ^= add[index];
+    add[index] ^= add[0]    ;
+    add[0]     ^= add[index];
+_DIGUI:
+    sort(add+1,len-1);
+}
 ```

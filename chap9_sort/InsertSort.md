@@ -43,6 +43,34 @@ void InsertSort(list_array L){
     }
 }
 
+
+一个递归实现
+void sort(int *add,int len)
+{
+    int fact  = 0;
+    int index = 0;
+    int obj   = add[len-1];
+
+    if(len <= 1 || !add || len > lstlen){
+        return;
+    }
+
+    index = len-1;
+    while(fact < len-1){
+        if(add[fact] > add[index]){
+            break;
+        }
+        fact++;
+    }
+    while(index > fact){
+        add[index] = add[index-1];
+        index--;
+    }
+    add[fact] = obj;
+    sort(add,len+1);
+}
+
+
 ```
 
       
